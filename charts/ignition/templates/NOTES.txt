@@ -1,0 +1,9 @@
+Ignition has been installed!
+
+{{- if contains "ClusterIP" .Values.service.type }}
+To access the gateway run:
+    kubectl port-forward svc/{{ include "ignition.fullname" . }} 8088:{{ .Values.service.targetPort }}
+
+The gateway will then be available in browser and through designer at:
+    http://localhost:8088
+{{- end }}
