@@ -1,1 +1,11 @@
+# Local values
 values.yaml
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+.fleet/
+
+# To-do
+TODO.md

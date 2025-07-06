@@ -1,6 +1,0 @@
-apiVersion: v2
-name: ignition
-description: A Helm chart for Inductive Automation Ignition
-type: application
-version: 0.1.0 # Chart version
-appVersion: "8.1.45" # Ignition gateway image version
