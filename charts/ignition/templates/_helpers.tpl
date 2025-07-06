@@ -48,6 +48,7 @@ Selector labels
 {{- define "ignition.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "ignition.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app: {{ include "ignition.name" . }}
 {{- end }}
 
 {{/*

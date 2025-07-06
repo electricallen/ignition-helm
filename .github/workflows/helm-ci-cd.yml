@@ -1,0 +1,32 @@
+# Set these env vars: https://github.com/helm/chart-releaser?tab=readme-ov-file#environment-variables
+name: Build Helm repo and publish to GitHub Pages
+
+on:
+  push:
+    paths: # only update helm repo when chart or this workflow change
+      - 'charts/**'
+      - '.github/workflows/helm-ci-cd.yml'
+    branches:
+      - main
+
+jobs:
+  release:
+    name: Build and publish Helm repo
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.7.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

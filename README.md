@@ -5,13 +5,18 @@ Simple helm chart for deploying Ignition into Kubernetes
 
 ### Installing locally
 
-```sh
-git clone <THIS REPO URL>
-cd ./<THIS REPO NAME>/
-cp example-values.yaml values.yaml
-# Edit values.yaml
-helm install ignition ./
-```
+    ```sh
+    git clone https://github.com/electricallen/ignition-helm.git
+    cd ./ignition-helm
+    ```
+> [!IMPORTANT]  
+> You must change `values` to accept the EULA
+
+Edit `./charts/ignition/values.yaml` then run:
+
+    ```
+    helm install ignition ./charts/ignition
+    ```
 
 ## Accessing Ignition
 
