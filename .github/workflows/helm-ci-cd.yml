@@ -1,4 +1,3 @@
-# Set these env vars: https://github.com/helm/chart-releaser?tab=readme-ov-file#environment-variables
 name: Build Helm repo and publish to GitHub Pages
 
 on:
