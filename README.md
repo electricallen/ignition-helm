@@ -1,5 +1,4 @@
 # ignition-helm
 Simple helm chart for deploying Ignition into Kubernetes
 
-## Installation
-Refer to the `main` branch for documentation https://github.com/electricallen/ignition-helm/blob/main/README.md
+Refer to [the `main` branch](https://github.com/electricallen/ignition-helm/blob/main/README.md) for documentation
