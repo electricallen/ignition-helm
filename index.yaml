@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  ignition:
+  - apiVersion: v2
+    appVersion: 8.1.45
+    created: "2025-07-06T00:17:25.514323397Z"
+    description: A Helm chart for Inductive Automation Ignition
+    digest: f58db28d27742e438554bed7b4b7907a47c5516bf5af4b9e72ba82749190a997
+    name: ignition
+    type: application
+    urls:
+    - https://github.com/electricallen/ignition-helm/releases/download/ignition-0.1.0/ignition-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-07-06T00:17:25.514331332Z"
