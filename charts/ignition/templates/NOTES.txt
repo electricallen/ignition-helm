@@ -11,7 +11,6 @@ The gateway will then be available in browser and through designer at:
 
 {{- if .Values.ingress.enabled  }}
 To access the gateway visit:
-    {{- $tls := true }}
     {{- if empty .Values.ingress.tls }}
         {{- $tls = false }}
     {{- end }}

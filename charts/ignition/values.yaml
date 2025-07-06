@@ -12,14 +12,16 @@ image:
 env:
   ACCEPT_IGNITION_EULA: "N" # Accept the EULA https://inductiveautomation.com/ignition/license
   IGNITION_EDITION: "standard" 
+  GATEWAY_ADMIN_USERNAME: "admin"
   GATEWAY_ADMIN_PASSWORD: "password"
+  DISABLE_QUICKSTART: "true" 
 
 # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
   type: ClusterIP # Use NodePort if ingress is enabled
   port: 8088
   targetPort: 8088 # Will also set GATEWAY_HTTP_PORT env var
-  # nodePort: 30080 # Use with NodePort
+  # nodePort: 30080 # Use with NodePort/ingress
 
 ingress:
   enabled: false
