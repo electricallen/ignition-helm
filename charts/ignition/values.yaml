@@ -16,9 +16,21 @@ env:
 
 # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
-  type: ClusterIP
+  type: ClusterIP # Use NodePort if ingress is enabled
   port: 8088
   targetPort: 8088 # Will also set GATEWAY_HTTP_PORT env var
+  # nodePort: 30080 # Use with NodePort
+
+ingress:
+  enabled: false
+  className: traefik
+  annotations: {}
+  hosts:
+    - host: ignition.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:

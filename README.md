@@ -1,5 +1,4 @@
-![Ignition Helm Icon](assets/icon.svg)
-# ignition-helm
+# ![Ignition Helm Icon](assets/icon.svg) ignition-helm
 
 Simple helm chart for deploying Ignition into Kubernetes
 
