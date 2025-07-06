@@ -40,7 +40,7 @@ See the [Kubernetes docs on Service types](https://kubernetes.io/docs/concepts/s
 
 ### Insecure ClusterIP (default)
 
-By default, `values.yaml` is configured to create a `ClusterIP` service, and is only reachable from inside the cluster. Remote hosts can reach this service using the `kubectl proxy`:
+By default, `values.yaml` is configured to create a `ClusterIP` service, and is only reachable from inside the cluster. Remote hosts can reach this service using the `kubectl port-forward`:
 
 ```
 kubectl port-forward svc/ignition 8088:8088
@@ -50,9 +50,15 @@ Then you can access the gateway in browser or through designer at http://localho
 
 ### Ingress
 
-The default approach is limited - the proxied connection is only available on the machine running `kubectl proxy`, and the connection is only available as long as the proxy is active. 
+The default approach is only available on machines that can run `kubectl` and the connection terminates once the command exits. 
 
-A more durable approach is to create an [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) to expose the service to hosts outside the cluster. This requires an [ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/) resource **not** included in this repo. While any ingress controller can be used, the default configuration shows how to set up a traefik-compatable ingress. Traefik comes preinstalled in k3s and can be [installed using helm](https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart).
+A more durable approach is to create an [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) to expose the service to hosts outside the cluster. The following is required to use an ingress:
+
+* `ingress.enabled` = `true` in `values.yaml`
+* DNS and/or routing to the hostnames or IPs defined in `ingress.hosts`
+* An [ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/) resource installed on the cluster (**not** included in this repo)
+    * Any ingress controller can be used, the default is configured for Traefik
+    * Traefik can be [installed using helm](https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart); it is also preinstalled in k3s
 
 Here is one example of `values.yaml` configured to make the gateway available at `http://ignition.mydomain.tld`:
 
