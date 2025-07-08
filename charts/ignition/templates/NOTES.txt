@@ -1,4 +1,7 @@
-Ignition has been installed!
+Ignition has been installed! 
+
+Setting eula.accepted constitutes acceptance of the IA EULA, see:
+    https://inductiveautomation.com/ignition/license
 
 {{- if contains "ClusterIP" .Values.service.type }}
 To access the gateway run:
@@ -11,6 +14,7 @@ The gateway will then be available in browser and through designer at:
 
 {{- if .Values.ingress.enabled  }}
 To access the gateway visit:
+    {{- $tls := true }}
     {{- if empty .Values.ingress.tls }}
         {{- $tls = false }}
     {{- end }}

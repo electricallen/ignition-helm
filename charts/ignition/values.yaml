@@ -1,3 +1,7 @@
+# Accept the EULA https://inductiveautomation.com/ignition/license
+eula:
+  accepted: false
+
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1
 
@@ -10,7 +14,6 @@ image:
 # Environment variables here are set for the Ignition Gateway, add as needed
 # More information can be found here: https://www.docs.inductiveautomation.com/docs/8.1/platform/docker-image#environment-variables
 env:
-  ACCEPT_IGNITION_EULA: "N" # Accept the EULA https://inductiveautomation.com/ignition/license
   IGNITION_EDITION: "standard" 
   GATEWAY_ADMIN_USERNAME: "admin"
   GATEWAY_ADMIN_PASSWORD: "password"

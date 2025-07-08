@@ -30,12 +30,16 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           env:
+            - name: GATEWAY_HTTP_PORT
+              value: "{{ .Values.service.targetPort }}"
+          {{- if .Values.eula.accepted }}
+            - name: ACCEPT_IGNITION_EULA
+              value: "Y"
+          {{- end}}
           {{- range $key, $value := .Values.env }}
             - name: {{ $key }}
               value: "{{ $value }}"
           {{- end }}
-            - name: GATEWAY_HTTP_PORT
-              value: "{{ .Values.service.targetPort }}"
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}

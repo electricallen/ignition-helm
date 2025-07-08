@@ -5,33 +5,37 @@ Simple helm chart for deploying Ignition into Kubernetes
 ## Installation
 
 > [!IMPORTANT]  
-> You must edit `values.yaml` to accept the EULA
+> You must accept Inductive Automation's [Ignition EULA](https://inductiveautomation.com/ignition/license) by setting the `eula.accepted` value true
 
-### Add helm repo and install (preferred method)
+### Quickstart
 
-Either copy/paste the contents or run:
-
-```sh
-wget -O values.yaml https://raw.githubusercontent.com/electricallen/ignition-helm/main/charts/ignition/values.yaml
-```
-
-Edit Then run:
+Add the repo and install. Passing `--set eula.accepted=true` constitutes acceptance of the IA EULA.
 
 ```sh
-helm repo add ignition-helm https://electricallen.github.io/ignition-helm
-helm upgrade --install ignition ignition-helm/ignition -f values.yaml
+helm repo add electricallen https://electricallen.github.io/ignition-helm
+helm upgrade --install ignition electricallen/ignition --set eula.accepted=true
 ```
 
-### Cloning Git and installing from local chart
+### Editing values
+
+To modify helm values, download and edit `charts/ignition/values.yaml`, EG:
 
 ```sh
-git clone https://github.com/electricallen/ignition-helm.git
+curl -O https://raw.githubusercontent.com/electricallen/ignition-helm/main/charts/ignition/values.yaml
 ```
 
-Edit `./ignition-helm/charts/ignition/values.yaml` then run:
+Then create a new release with:
 
+```sh
+helm upgrade --install ignition electricallen/ignition -f values.yaml
 ```
-helm upgrade --install ignition ./ignition-helm/charts/ignition
+
+### Updating the chart
+
+To update to the latest version of the chart run:
+
+```sh
+helm repo update electricallen
 ```
 
 ## Networking
@@ -50,9 +54,7 @@ Then you can access the gateway in browser or through designer at http://localho
 
 ### Ingress
 
-The default approach is only available on machines that can run `kubectl` and the connection terminates once the command exits. 
-
-A more durable approach is to create an [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) to expose the service to hosts outside the cluster. The following is required to use an ingress:
+The default approach is only available on machines that can run `kubectl` and the connection terminates once the command exits. A more practical approach is to create an [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) to expose the service to hosts outside the cluster. The following is required to use an ingress:
 
 * `ingress.enabled` = `true` in `values.yaml`
 * DNS and/or routing to the hostnames or IPs defined in `ingress.hosts`
