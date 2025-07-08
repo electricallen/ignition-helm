@@ -9,7 +9,7 @@ Simple helm chart for deploying Ignition into Kubernetes
 
 ### Quickstart
 
-Add the repo and install. Passing `--set eula.accepted=true` constitutes acceptance of the IA EULA.
+Add the repo and install. Passing `--set eula.accepted=true` constitutes acceptance of the [Ignition EULA](https://inductiveautomation.com/ignition/license).
 
 ```sh
 helm repo add electricallen https://electricallen.github.io/ignition-helm

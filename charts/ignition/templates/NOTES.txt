@@ -1,9 +1,10 @@
-Ignition has been installed! 
-
 Setting eula.accepted constitutes acceptance of the IA EULA, see:
     https://inductiveautomation.com/ignition/license
 
+Ignition has been installed! 
+
 {{- if contains "ClusterIP" .Values.service.type }}
+
 To access the gateway run:
     kubectl port-forward svc/{{ include "ignition.fullname" . }} 8088:{{ .Values.service.targetPort }}
 
