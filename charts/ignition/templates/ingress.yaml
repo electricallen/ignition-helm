@@ -37,7 +37,7 @@ spec:
               service:
                 name: {{ include "ignition.fullname" $ }}
                 port:
-                  number: {{ $.Values.service.port }}
+                  name: {{ $.Values.ingress.portName | default "http" }}
           {{- end }}
     {{- end }}
 {{- end }}

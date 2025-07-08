@@ -1,19 +1,21 @@
-Setting eula.accepted constitutes acceptance of the IA EULA, see:
-    https://inductiveautomation.com/ignition/license
+{{- $httpPort := "" }}
+{{- $httpsPort := "" }}
+{{- $ganPort := "" }}
+{{- range .Values.service.ports }}
+  {{- if eq .name "http" }}
+    {{- $httpPort = .port }}
+  {{- else if eq .name "https" }}
+    {{- $httpsPort = .port }}
+  {{- else if eq .name "gan" }}
+    {{- $ganPort = .port }}
+  {{- end }}
+{{- end }}
+Setting eula.accepted constitutes acceptance of the IA EULA, see: https://inductiveautomation.com/ignition/license
 
 Ignition has been installed! 
 
-{{- if contains "ClusterIP" .Values.service.type }}
-
-To access the gateway run:
-    kubectl port-forward svc/{{ include "ignition.fullname" . }} 8088:{{ .Values.service.targetPort }}
-
-The gateway will then be available in browser and through designer at:
-    http://localhost:8088
-{{- end }}
-
-
 {{- if .Values.ingress.enabled  }}
+
 To access the gateway visit:
     {{- $tls := true }}
     {{- if empty .Values.ingress.tls }}
@@ -26,4 +28,11 @@ To access the gateway visit:
     http://{{ .host }}
         {{- end }}
     {{- end }}
+{{- else }}
+
+To access the gateway run:
+    kubectl port-forward svc/{{ include "ignition.fullname" . }} {{ $httpPort }}:{{ $httpPort }}
+
+The gateway will then be available in browser and through designer at:
+    http://localhost:{{ $httpPort }}
 {{- end }}

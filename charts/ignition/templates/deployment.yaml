@@ -1,3 +1,15 @@
+{{- $httpPort := "" }}
+{{- $httpsPort := "" }}
+{{- $ganPort := "" }}
+{{- range .Values.service.ports }}
+  {{- if eq .name "http" }}
+    {{- $httpPort = .port }}
+  {{- else if eq .name "https" }}
+    {{- $httpsPort = .port }}
+  {{- else if eq .name "gan" }}
+    {{- $ganPort = .port }}
+  {{- end }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,11 +39,21 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ $httpPort }}
+              protocol: TCP
+            - name: https
+              containerPort: {{ $httpsPort }}
+              protocol: TCP
+            - name: gan
+              containerPort: {{ $ganPort }}
               protocol: TCP
           env:
             - name: GATEWAY_HTTP_PORT
-              value: "{{ .Values.service.targetPort }}"
+              value: "{{ $httpPort }}"
+            - name: GATEWAY_HTTPS_PORT
+              value: "{{ $httpsPort }}"
+            - name: GATEWAY_GAN_PORT
+              value: "{{ $ganPort }}"
           {{- if .Values.eula.accepted }}
             - name: ACCEPT_IGNITION_EULA
               value: "Y"
@@ -40,11 +62,15 @@ spec:
             - name: {{ $key }}
               value: "{{ $value }}"
           {{- end }}
-          {{- with .Values.livenessProbe }}
           livenessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.readinessProbe }}
-          readinessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            httpGet:
+              path: /StatusPing
+              port: http
+          readinessProbe: # Check for RUNNING status
+            exec:
+              command:
+                - sh
+                - -c
+                - 'curl -sf http://localhost:{{ $httpPort }}/StatusPing | grep -q RUNNING'
+            initialDelaySeconds: 10
+            periodSeconds: 5

@@ -1,4 +1,5 @@
-# ![Ignition Helm Icon](assets/icon.svg) ignition-helm
+# ignition-helm
+![Ignition Helm Icon](assets/icon.svg)
 
 Simple helm chart for deploying Ignition into Kubernetes
 
@@ -42,15 +43,15 @@ helm repo update electricallen
 
 See the [Kubernetes docs on Service types](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types) for more details. 
 
-### Insecure ClusterIP (default)
+### `kubectl port-forward`
 
-By default, `values.yaml` is configured to create a `ClusterIP` service, and is only reachable from inside the cluster. Remote hosts can reach this service using the `kubectl port-forward`:
+By default the gateway is only accessible from inside the cluster. Remote hosts can reach this service using the `kubectl port-forward`, for example:
 
 ```
 kubectl port-forward svc/ignition 8088:8088
 ```
 
-Then you can access the gateway in browser or through designer at http://localhost:8088. 
+The gateway is then available in browser or through designer at http://localhost:8088. 
 
 ### Ingress
 
@@ -59,27 +60,5 @@ The default approach is only available on machines that can run `kubectl` and th
 * `ingress.enabled` = `true` in `values.yaml`
 * DNS and/or routing to the hostnames or IPs defined in `ingress.hosts`
 * An [ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/) resource installed on the cluster (**not** included in this repo)
-    * Any ingress controller can be used, the default is configured for Traefik
-    * Traefik can be [installed using helm](https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart); it is also preinstalled in k3s
-
-Here is one example of `values.yaml` configured to make the gateway available at `http://ignition.mydomain.tld`:
-
-```yaml
-service:
-  type: NodePort
-  port: 8088
-  targetPort: 8088 # Will also set GATEWAY_HTTP_PORT env var
-  nodePort: 30080 
-
-ingress:
-  enabled: true
-  className: traefik
-  annotations: {}
-  hosts:
-    - host: ignition.mydomain.tld
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
-```
+    * Any ingress controller can be used, the default is configured for Traefik (which is pre-installed in k3s and can be [installed using helm](https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart) elsewhere)
 
