@@ -75,7 +75,7 @@ By default, no volumes are configured and gateway data is lost when a pod is res
     * `volumeClaimTemplates[0].spec.resources.requests.storage` set to the amount of storage needed for each pod
     * `volumeClaimTemplates[0].spec.storageClassName` set to the storage class installed on the cluster
 
-This example provisions a 1 GiB [`local-path`](https://github.com/rancher/local-path-provisioner) volume. The `local-path` storage class comes pre-installed in k3s and Rancher desktop clusters, but can be[ installed to other Kubernetes clusters manually](https://github.com/rancher/local-path-provisioner?tab=readme-ov-file#deployment). 
+This example provisions a 1 GiB [`local-path`](https://github.com/rancher/local-path-provisioner) volume. The `local-path` storage class comes pre-installed in k3s and Rancher desktop clusters, but can be [installed to other Kubernetes clusters manually](https://github.com/rancher/local-path-provisioner?tab=readme-ov-file#deployment). 
 
 ```yaml
 volumeClaimTemplates: 
