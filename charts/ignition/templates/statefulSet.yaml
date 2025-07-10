@@ -78,6 +78,7 @@ spec:
                 - 'curl -sf http://localhost:{{ $httpPort }}/StatusPing | grep -q RUNNING'
             initialDelaySeconds: 10
             periodSeconds: 5
+      {{- if .Values.volumeClaimTemplates }}
           volumeMounts:
             - name: ignition-data
               mountPath: /usr/local/bin/ignition/data
@@ -98,6 +99,7 @@ spec:
           volumeMounts:
             - name: ignition-data
               mountPath: /tmp/ignition-data
+      {{- end }}
     {{- with .Values.volumeClaimTemplates }}
   volumeClaimTemplates:
     {{- toYaml . | nindent 4 }}
