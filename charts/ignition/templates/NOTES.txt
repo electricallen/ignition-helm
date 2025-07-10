@@ -36,3 +36,4 @@ To access the gateway run:
 The gateway will then be available in browser and through designer at:
     http://localhost:{{ $httpPort }}
 {{- end }}
+Please allow at least 30 seconds for the gateway to start
