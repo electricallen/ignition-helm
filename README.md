@@ -71,12 +71,23 @@ The default approach is only available on machines that can run `kubectl` and th
 By default, no volumes are configured and gateway data is lost when a pod is restarted. [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) can be created to persist gateway data between pod restarts. The following is required in order to use persistent volumes:
 
 * A [Storage Class](https://kubernetes.io/docs/concepts/storage/storage-classes/) installed on the cluster (check with `kubectl get storageclass`)
-* The `volumeMounts` section of `values.yaml` configured. The example shown in comments should cover most use cases, but can be changed if data in additional directories need to be persisted (EG supplemental certificates)
 * The `volumeClaimTemplates` section of `values.yaml` configured, specifically:
     * `volumeClaimTemplates[0].spec.resources.requests.storage` set to the amount of storage needed for each pod
     * `volumeClaimTemplates[0].spec.storageClassName` set to the storage class installed on the cluster
 
-The example shown in the comments provisions a 1 GiB [`local-path`](https://github.com/rancher/local-path-provisioner) volume. This storage class comes pre-installed in k3s and Rancher desktop clusters, but can be[ installed to other Kubernetes clusters manually](https://github.com/rancher/local-path-provisioner?tab=readme-ov-file#deployment). 
+This example provisions a 1 GiB [`local-path`](https://github.com/rancher/local-path-provisioner) volume. The `local-path` storage class comes pre-installed in k3s and Rancher desktop clusters, but can be[ installed to other Kubernetes clusters manually](https://github.com/rancher/local-path-provisioner?tab=readme-ov-file#deployment). 
+
+```yaml
+volumeClaimTemplates: 
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOncePod"]
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: local-path
+```
 
 > [!CAUTION]
 > Volumes using the `local-path`, `local`, or `hostPath` storage classes all come with limitations and are not suited for production Ignition deployments
