@@ -48,7 +48,7 @@ ingress:
 # Additional volumeClaimTemplates on the output Deployment definition.
 volumeClaimTemplates: []
   # - metadata:
-  #     name: ignition-data
+  #     name: data
   #   spec:
   #     accessModes: ["ReadWriteOncePod"]
   #     resources:

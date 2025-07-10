@@ -80,7 +80,7 @@ spec:
             periodSeconds: 5
       {{- if .Values.volumeClaimTemplates }}
           volumeMounts:
-            - name: ignition-data
+            - name: {{ (index .Values.volumeClaimTemplates 0).metadata.name }}
               mountPath: /usr/local/bin/ignition/data
       initContainers:
         - name: "init-{{ .Chart.Name }}"
@@ -89,16 +89,16 @@ spec:
           command: ["/bin/sh", "-c"]
           args: # Mount PVC to a temp dir; if non-empty, copy data from the image to the temp dir
             - |
-              if [ ! -f /tmp/ignition-data/gateway.xml_clean ]; 
+              if [ ! -f /tmp/gw-data/gateway.xml_clean ]; 
               then
-                cp -a /usr/local/bin/ignition/data/* /tmp/ignition-data
+                cp -a /usr/local/bin/ignition/data/* /tmp/gw-data
                 echo "Volume initialized"
               else
                 echo "Volume already initialized, passing"
               fi
           volumeMounts:
-            - name: ignition-data
-              mountPath: /tmp/ignition-data
+            - name: {{ (index .Values.volumeClaimTemplates 0).metadata.name }}
+              mountPath: /tmp/gw-data
       {{- end }}
     {{- with .Values.volumeClaimTemplates }}
   volumeClaimTemplates:
