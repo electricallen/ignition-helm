@@ -88,8 +88,12 @@ spec:
           command: ["/bin/sh", "-c"]
           args: # Mount PVC to a temp dir; if non-empty, copy data from the image to the temp dir
             - |
-              if [ ! -f /tmp/ignition-data/gateway.xml_clean ]; then
+              if [ ! -f /tmp/ignition-data/gateway.xml_clean ]; 
+              then
                 cp -a /usr/local/bin/ignition/data/* /tmp/ignition-data
+                echo "Volume initialized"
+              else
+                echo "Volume already initialized, passing"
               fi
           volumeMounts:
             - name: ignition-data
