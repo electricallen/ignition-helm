@@ -44,11 +44,6 @@ ingress:
         - path: /
           pathType: Prefix
   tls: []
-# Additional volumeMounts on the output Deployment definition.
-
-volumeMounts: []
-  # - name: ignition-data
-  #   mountPath: /usr/local/bin/ignition/data
 
 # Additional volumeClaimTemplates on the output Deployment definition.
 volumeClaimTemplates: []
