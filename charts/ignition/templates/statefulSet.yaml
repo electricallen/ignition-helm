@@ -81,11 +81,10 @@ spec:
           volumeMounts:
             - name: ignition-data
               mountPath: /usr/local/bin/ignition/data
-          {{- end }}
       initContainers:
-        - name: init-ignition
+        - name: "init-{{ .Chart.Name }}"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.initContainer.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/bin/sh", "-c"]
           args: # Mount PVC to a temp dir; if non-empty, copy data from the image to the temp dir
             - |
