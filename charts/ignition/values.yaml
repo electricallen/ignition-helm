@@ -32,14 +32,26 @@ service:
       protocol: TCP
       port: 8060
 
+# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: false
   className: traefik
   annotations: {}
   portName: http
   hosts:
-    - host: ignition.local
+    - host: ignition.localhost
       paths:
         - path: /
           pathType: Prefix
   tls: []
+
+# Additional volumeClaimTemplates on the output Deployment definition.
+volumeClaimTemplates: []
+  # - metadata:
+  #     name: data
+  #   spec:
+  #     accessModes: ["ReadWriteOncePod"]
+  #     resources:
+  #       requests:
+  #         storage: 1Gi
+  #     storageClassName: local-path

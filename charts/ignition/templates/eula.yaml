@@ -1,3 +1,0 @@
-{{- if not .Values.eula.accepted }}
-{{- fail "EULA must be accepted. Please set 'eula.accepted=true' in your values.yaml or via --set. See https://inductiveautomation.com/ignition/license" }}
-{{- end }}
