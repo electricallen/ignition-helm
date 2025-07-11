@@ -83,3 +83,9 @@ The example shown in the comments provisions a 1 GiB [`local-path`](https://gith
 >   `hostPath` has [many security risks](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) and can cause data loss if pods are rescheduling to a new node. `local` prevents pods from being scheduled to a new node, and does not support dynamic provisioning. `local-path` creates either `local` or `hostPath` volumes, and is subject to the limitations of both.
 >
 > Use a dedicated off-cluster storage class in production, such as [`nfs`](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath), or the storage classes provided by your cloud provider (EG [AWS](https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html) or [Azure](https://learn.microsoft.com/en-us/azure/aks/concepts-storage#storage-classes))
+
+## HTTPS
+
+By default, TLS certificates for HTTPS are disabled. If enabled, this chart makes use of [`cert-manager`](https://cert-manager.io/docs/) for issuing certificates to the ingress controller. The following are required to use HTTPS:
+
+* `cert-manager` installed (EG [through Helm](https://cert-manager.io/docs/installation/helm/))
