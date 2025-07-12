@@ -3,6 +3,17 @@ entries:
   ignition:
   - apiVersion: v2
     appVersion: 8.1.47
+    created: "2025-07-12T19:42:59.192963176Z"
+    description: Simple helm chart for deploying Ignition into Kubernetes
+    digest: 72335ddfcc8b5473db995606e662c2c1d7e2ca7b330d84522809bf12c57e5a75
+    icon: https://raw.githubusercontent.com/electricallen/ignition-helm/main/assets/icon.svg
+    name: ignition
+    type: application
+    urls:
+    - https://github.com/electricallen/ignition-helm/releases/download/ignition-0.1.8/ignition-0.1.8.tgz
+    version: 0.1.8
+  - apiVersion: v2
+    appVersion: 8.1.47
     created: "2025-07-10T23:48:48.695441368Z"
     description: Simple helm chart for deploying Ignition into Kubernetes
     digest: 1cc42de294b08cda46124339ce8b8590139c33950f9d389389e083ec60d59912
@@ -77,4 +88,4 @@ entries:
     urls:
     - https://github.com/electricallen/ignition-helm/releases/download/ignition-0.1.0/ignition-0.1.0.tgz
     version: 0.1.0
-generated: "2025-07-10T23:48:48.69547973Z"
+generated: "2025-07-12T19:42:59.192994335Z"
