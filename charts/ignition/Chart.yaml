@@ -2,6 +2,6 @@ apiVersion: v2
 name: ignition
 description: Simple helm chart for deploying Ignition into Kubernetes
 type: application
-version: 0.1.7 # Chart version
+version: 0.1.8 # Chart version
 appVersion: "8.1.47" # Ignition gateway image version
 icon: https://raw.githubusercontent.com/electricallen/ignition-helm/main/assets/icon.svg
