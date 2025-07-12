@@ -146,24 +146,24 @@ For this approach, the following are required:
 > The `secret` resources must be in the `cert-manager` default namespace, which is typically `cert-manager`
 > See [the docs here](https://cert-manager.io/docs/configuration/#cluster-resource-namespace)
 
-4. Configure the ingress `values.yaml` to request a certificate using the new `ClusterIssuer`:
+4. Configure the ingress in `values.yaml` to request a certificate using the new `ClusterIssuer`:
     ```yaml
     ingress:
-        enabled: true
-        className: traefik
-        annotations:
-            cert-manager.io/cluster-issuer: letsencrypt-staging
-            traefik.ingress.kubernetes.io/router.entrypoints: websecure
-        portName: http
-        hosts:
-            - host: ignition.yourdomain.tld
-            paths:
-                - path: /
-                pathType: Prefix
-        tls:
-            - hosts:
-                - ignition.yourdomain.tld
-            secretName: ignition-tls
+      enabled: true
+      className: traefik
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-staging
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      portName: http
+      hosts:
+        - host: ignition.yourdomain.tld
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - ignition.yourdomain.tld
+          secretName: ignition-tls
     ```
 5. Apply with `helm upgrade --install ignition electricallen/ignition -f values.yaml` 
 
