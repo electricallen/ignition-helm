@@ -86,6 +86,85 @@ The example shown in the comments provisions a 1 GiB [`local-path`](https://gith
 
 ## HTTPS
 
-By default, TLS certificates for HTTPS are disabled. If enabled, this chart makes use of [`cert-manager`](https://cert-manager.io/docs/) for issuing certificates to the ingress controller. The following are required to use HTTPS:
+There are many ways to use HTTPS for the gateway web page. Among them:
 
-* `cert-manager` installed (EG [through Helm](https://cert-manager.io/docs/installation/helm/))
+1. Connect to the pod using the HTTPS port (default `:8043`)
+    * Create an ingress to reach the pod on this port
+    * Self sign or generate a CA-signed certificate and upload through the web portal ("the old fashioned way")
+1. Connect to the pod using the HTTP port and have Kubernetes resources manage TLS
+    * Install an ingress controller such as `traefik`, and optionally a certificate manager such as `cert-manager`
+    * These services can generate, store, and serve certificates in front of the gateway pod
+
+The second approach centralizes certificate management, which can be reused for other applications in the cluster. 
+
+### Traefik, cert-manager, Let's Encrypt, and ACME
+
+At the risk of veering off topic, the second approach is demonstrated here using one potential collection of tools. There are many different tools you can use to accomplish TLS outside the pod, and all should work with this helm chart provided only one ingress is used. 
+
+For this approach, the following are required:
+
+1. A domain 
+1. The ability to issue [ACME challenges](https://letsencrypt.org/docs/challenge-types/)
+
+#### Steps
+
+1. Install `traefik` on the cluster. This comes pre-installed on k3s, but can be [installed using helm](https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart)
+1. [Install `cert-manager`](https://cert-manager.io/docs/installation/helm/#2-install-cert-manager)
+1. Create a `ClusterIssuer` resource and any necessary secrets. 
+    * Here is an example using the ACME staging URL and a cloudflare DNS-01 challenge with a zoned API token. See the `cert-manager` docs for [more issuer configuration examples](https://cert-manager.io/docs/configuration/issuers/).
+    * Create this file as `manifest.yaml`:
+    ```yaml
+    apiVersion: cert-manager.io/v1
+    kind: ClusterIssuer
+    metadata:
+    name: letsencrypt-staging
+    spec:
+    acme:
+        email: yourEmailHere@domain.tld
+        profile: tlsserver
+        server: https://acme-staging-v02.api.letsencrypt.org/directory
+        privateKeySecretRef:
+        name: cluster-issuer-account-key
+        solvers:
+        - dns01:
+            cloudflare:
+            apiTokenSecretRef:
+                name: cloudflare-api-token-secret
+                key: api-token
+    ---
+    apiVersion: v1
+    kind: Secret
+    metadata:
+    name: cloudflare-api-token-secret
+    type: Opaque
+    stringData:
+    api-token: Add secret here!
+    ```
+    * Create these resources with `kubectl apply -f manifest.yaml -n cert-manager`
+
+> [!NOTE]
+> The `secret` resources must be in the `cert-manager` default namespace, which is typically `cert-manager`
+> See [the docs here](https://cert-manager.io/docs/configuration/#cluster-resource-namespace)
+
+4. Configure the ingress `values.yaml` to request a certificate using the new `ClusterIssuer`:
+    ```yaml
+    ingress:
+        enabled: true
+        className: traefik
+        annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-staging
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        portName: http
+        hosts:
+            - host: ignition.yourdomain.tld
+            paths:
+                - path: /
+                pathType: Prefix
+        tls:
+            - hosts:
+                - ignition.yourdomain.tld
+            secretName: ignition-tls
+    ```
+5. Apply with `helm upgrade --install ignition electricallen/ignition -f values.yaml` 
+
+This will request a certificate for `ignition.yourdomain.tld`, complete the challenge, and then use that certificate for HTTP requests. Traefik will terminate TLS, and the pod will only see HTTP traffic. Subsequent ingresses can create their own certificates by adding a `tls` section.
