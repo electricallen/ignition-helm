@@ -1,7 +1,7 @@
 # ignition-helm
 ![Ignition Helm Icon](assets/icon.svg)
 
-Simple helm chart for deploying Ignition into Kubernetes
+Simple helm chart for deploying Ignition into Kubernetes. This was primarily made for a learning exercise and to accelerate some testing while IA works on their official Helm release.
 
 ## Installation
 
@@ -81,7 +81,7 @@ The example shown in the comments provisions a 1 GiB [`local-path`](https://gith
 > Volumes using the `local-path`, `local`, or `hostPath` storage classes all come with limitations and are not suited for production Ignition deployments
 >   `hostPath` has [many security risks](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) and can cause data loss if pods are rescheduling to a new node. `local` prevents pods from being scheduled to a new node, and does not support dynamic provisioning. `local-path` creates either `local` or `hostPath` volumes, and is subject to the limitations of both.
 >
-> Use a dedicated off-cluster storage class in production, such as [`nfs`](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath), or the storage classes provided by your cloud provider (EG [AWS](https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html) or [Azure](https://learn.microsoft.com/en-us/azure/aks/concepts-storage#storage-classes))
+> Use dedicated storage for production use. I've been told using block storage eliminates some issues seen with file storage classes like NFS.
 
 ## HTTPS
 
