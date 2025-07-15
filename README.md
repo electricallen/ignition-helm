@@ -19,10 +19,10 @@ helm upgrade --install ignition electricallen/ignition --set eula.accepted=true
 
 ### Editing values
 
-To modify helm values, download and edit `charts/ignition/values.yaml`, EG:
+Create a `values.yaml` file that contains the overrides you need, some examples are in this readme. Alternatively, pull down and edit the entire values file:
 
 ```sh
-curl -O https://raw.githubusercontent.com/electricallen/ignition-helm/main/charts/ignition/values.yaml
+helm show values electricallen/ignition > values.yaml
 ```
 
 Then create a new release with:
@@ -66,6 +66,26 @@ The default approach is only available on machines that can run `kubectl` and th
 * An [ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/) resource installed on the cluster (**not** included in this repo)
     * Any ingress controller can be used, the default is configured for Traefik (which is pre-installed in k3s and can be [installed using helm](https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart) elsewhere)
 
+### Traefik Insecure Ingress at `http://ignition.yourdomain.tld` `values.yaml`:
+
+```sh
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+  portName: http
+  hosts:
+    - host: ignition.yourdomain.tld
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - ignition.yourdomain.tld
+      secretName: ignition-tls
+```
+
 ## Persistent storage
 
 By default, no volumes are configured and gateway data is lost when a pod is restarted. [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) can be created to persist gateway data between pod restarts. The following is required in order to use persistent volumes:
@@ -83,6 +103,20 @@ The example shown in the comments provisions a 1 GiB [`local-path`](https://gith
 >
 > Use dedicated storage for production use. I've been told using block storage eliminates some issues seen with file storage classes like NFS.
 
+### `local-path` Persistent Volume Claim `values.yaml`:
+
+```sh
+volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOncePod"]
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: local-path
+```
+
 ## HTTPS
 
 There are many ways to use HTTPS for the gateway web page. Among them:
@@ -97,6 +131,28 @@ There are many ways to use HTTPS for the gateway web page. Among them:
 The second approach centralizes certificate management, which can be reused for other applications in the cluster. 
 
 ### Traefik, cert-manager, Let's Encrypt, and ACME
+
+### Secure ingress at `https://ignition.yourdomain.tld` `values.yaml`:
+
+```sh
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    spec.ingressClassName: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  portName: http
+  hosts:
+    - host: ignition.yourdomain.tld
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - ignition.yourdomain.tld
+      secretName: ignition-tls
+```
 
 At the risk of veering off topic, the second approach is demonstrated here using one potential collection of tools. There are many different tools you can use to accomplish TLS outside the pod, and all should work with this helm chart provided only one ingress is used. 
 
@@ -145,25 +201,7 @@ For this approach, the following are required:
 > The `secret` resources must be in the `cert-manager` default namespace, which is typically `cert-manager`
 > See [the docs here](https://cert-manager.io/docs/configuration/#cluster-resource-namespace)
 
-4. Configure the ingress in `values.yaml` to request a certificate using the new `ClusterIssuer`:
-    ```yaml
-    ingress:
-      enabled: true
-      className: traefik
-      annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-staging
-        traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      portName: http
-      hosts:
-        - host: ignition.yourdomain.tld
-          paths:
-            - path: /
-              pathType: Prefix
-      tls:
-        - hosts:
-            - ignition.yourdomain.tld
-          secretName: ignition-tls
-    ```
+4. Use the ingress declared in `values.yaml` above to request a certificate using the new `ClusterIssuer` (note the `annotations` and `tls.hosts`)
 5. Apply with `helm upgrade --install ignition electricallen/ignition -f values.yaml` 
 
 This will request a certificate for `ignition.yourdomain.tld`, complete the challenge, and then use that certificate for HTTP requests. Traefik will terminate TLS, and the pod will only see HTTP traffic. Subsequent ingresses can create their own certificates by adding a `tls` section.
