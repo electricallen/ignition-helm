@@ -130,9 +130,7 @@ There are many ways to use HTTPS for the gateway web page. Among them:
 
 The second approach centralizes certificate management, which can be reused for other applications in the cluster. 
 
-### Traefik, cert-manager, Let's Encrypt, and ACME
-
-### Secure ingress at `https://ignition.yourdomain.tld` `values.yaml`:
+### SSL Termination at Ingress Controller `values.yaml`:
 
 ```sh
 ingress:
@@ -154,7 +152,9 @@ ingress:
       secretName: ignition-tls
 ```
 
-At the risk of veering off topic, the second approach is demonstrated here using one potential collection of tools. There are many different tools you can use to accomplish TLS outside the pod, and all should work with this helm chart provided only one ingress is used. 
+### Traefik, cert-manager, Let's Encrypt, and ACME
+
+At the risk of veering off topic, ingress controller SSL termination is demonstrated here using one potential collection of tools.
 
 For this approach, the following are required:
 
