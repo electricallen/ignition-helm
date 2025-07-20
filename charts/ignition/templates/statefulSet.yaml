@@ -102,5 +102,5 @@ spec:
       {{- end }}
     {{- with .Values.volumeClaimTemplates }}
   volumeClaimTemplates:
-    {{- toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 2 }}
     {{- end }}
